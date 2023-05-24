@@ -1,6 +1,6 @@
 package com.tam.data.table
 
-import com.tam.data.model.ShoppingList
+import com.tam.data.model.entity.ShoppingList
 import org.ktorm.schema.*
 
 object ShoppingLists : Table<ShoppingList>("t_shopping_lists") {

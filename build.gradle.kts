@@ -42,5 +42,6 @@ dependencies {
 
     // Ktorm
     implementation("org.ktorm:ktorm-core:$ktorm_version")
+    implementation("org.ktorm:ktorm-support-mysql:$ktorm_version")
     implementation("mysql:mysql-connector-java:$jdbc_driver_version")
 }
