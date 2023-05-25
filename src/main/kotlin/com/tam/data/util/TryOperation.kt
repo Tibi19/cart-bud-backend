@@ -27,3 +27,11 @@ private inline fun tryOperation(operation: () -> Unit): Boolean =
         e.printStackTrace()
         false
     }
+
+fun <T> tryGet(get: () -> T?): T? =
+    try {
+        get()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }

@@ -2,26 +2,34 @@ package com.tam.data.dao
 
 import com.tam.data.dao.contract.entity.EntryDao
 import com.tam.data.model.entity.Entry
+import com.tam.data.table.entries
+import com.tam.data.util.tryAdd
+import com.tam.data.util.tryGet
+import com.tam.data.util.tryRemoveIf
+import com.tam.data.util.tryUpdate
 import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.entity.filter
+import org.ktorm.entity.toList
 
-class EntryDaoImpl(private val database: Database) : EntryDao {
-    override fun changeCheck(): Boolean {
-        TODO("Not yet implemented")
-    }
+class EntryDaoImpl(database: Database) : EntryDao {
 
-    override fun insert(element: Entry): Boolean {
-        TODO("Not yet implemented")
-    }
+    private val entries = database.entries
 
-    override fun update(element: Entry): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun insert(element: Entry): Boolean =
+        entries.tryAdd(element)
 
-    override fun delete(element: Entry): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun update(element: Entry): Boolean =
+        entries.tryUpdate(element)
 
-    override fun getAllByParent(parentId: String): List<Entry>? {
-        TODO("Not yet implemented")
-    }
+    override fun delete(elementId: String): Boolean =
+        entries.tryRemoveIf { it.id eq elementId }
+
+    override fun getAllByParentId(parentId: String): List<Entry>? =
+        tryGet {
+            entries
+                .filter { it.parent.id eq parentId }
+                .toList()
+        }
+
 }

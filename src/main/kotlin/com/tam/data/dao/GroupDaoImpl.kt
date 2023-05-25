@@ -2,22 +2,24 @@ package com.tam.data.dao
 
 import com.tam.data.dao.contract.entity.GroupDao
 import com.tam.data.model.entity.Group
+import com.tam.data.table.groups
+import com.tam.data.util.tryAdd
+import com.tam.data.util.tryRemoveIf
+import com.tam.data.util.tryUpdate
 import org.ktorm.database.Database
+import org.ktorm.dsl.eq
 
-class GroupDaoImpl(private val database: Database) : GroupDao {
-    override fun insert(element: Group): Boolean {
-        TODO("Not yet implemented")
-    }
+class GroupDaoImpl(database: Database) : GroupDao {
 
-    override fun update(element: Group): Boolean {
-        TODO("Not yet implemented")
-    }
+    private val groups = database.groups
 
-    override fun delete(element: Group): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun insert(element: Group): Boolean =
+        groups.tryAdd(element)
 
-    override fun getAllByParent(parentId: String): List<Group>? {
-        TODO("Not yet implemented")
-    }
+    override fun update(element: Group): Boolean =
+        groups.tryUpdate(element)
+
+    override fun delete(elementId: String): Boolean =
+        groups.tryRemoveIf { it.id eq elementId }
+
 }

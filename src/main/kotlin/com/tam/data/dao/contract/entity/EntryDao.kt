@@ -5,6 +5,4 @@ import com.tam.data.dao.contract.operation.GetAllByParentDao
 import com.tam.data.dao.contract.operation.InsertDao
 import com.tam.data.model.entity.Entry
 
-interface EntryDao : InsertDao<Entry>, EditDao<Entry>, GetAllByParentDao<Entry> {
-    fun changeCheck(): Boolean
-}
+interface EntryDao : InsertDao<Entry>, EditDao<Entry>, GetAllByParentDao<Entry>

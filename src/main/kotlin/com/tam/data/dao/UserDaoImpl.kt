@@ -4,14 +4,21 @@ import com.tam.data.dao.contract.entity.UserDao
 import com.tam.data.model.entity.User
 import com.tam.data.table.users
 import com.tam.data.util.tryAdd
+import com.tam.data.util.tryGet
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.entity.find
 
-class UserDaoImpl(private val database: Database) : UserDao {
+class UserDaoImpl(database: Database) : UserDao {
+
+    private val users = database.users
+
     override fun getUserByUsername(username: String): User? =
-        database.users.find { it.username eq username }
+        tryGet {
+            users.find { it.username eq username }
+        }
 
     override fun insert(element: User): Boolean =
-        database.users.tryAdd(element)
+        users.tryAdd(element)
+
 }
