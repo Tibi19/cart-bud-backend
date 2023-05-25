@@ -4,6 +4,7 @@ val logback_version: String by project
 val koin_version: String by project
 val ktorm_version: String by project
 val jdbc_driver_version: String by project
+val commons_codec_version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.21"
@@ -44,4 +45,7 @@ dependencies {
     implementation("org.ktorm:ktorm-core:$ktorm_version")
     implementation("org.ktorm:ktorm-support-mysql:$ktorm_version")
     implementation("mysql:mysql-connector-java:$jdbc_driver_version")
+
+    // Authentication
+    implementation("commons-codec:commons-codec:$commons_codec_version")
 }
