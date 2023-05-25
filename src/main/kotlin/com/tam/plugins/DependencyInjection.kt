@@ -1,13 +1,17 @@
 package com.tam.plugins
 
-import com.tam.di.appModule
+import com.tam.di.dataModule
+import com.tam.di.securityModule
 import io.ktor.server.application.*
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
-fun Application.configureDependencyInjection() {
+fun Application.configureDependencyInjection(environment: ApplicationEnvironment) {
     install(Koin) {
         slf4jLogger()
-        modules(appModule)
+        modules(
+            dataModule,
+            securityModule(environment)
+        )
     }
 }
