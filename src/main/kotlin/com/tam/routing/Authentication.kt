@@ -49,9 +49,9 @@ fun Route.signUp() {
         }
 
         val saltedHash = hashingService.generateSaltedHash(request.password)
-        val isSuccesful = repository.createUser(request.username, saltedHash)
+        val isOk = repository.createUser(request.username, saltedHash)
 
-        if (!isSuccesful) {
+        if (!isOk) {
             call.respond(HttpStatusCode.Conflict)
             return@post
         }
