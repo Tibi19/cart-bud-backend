@@ -37,7 +37,7 @@ fun Route.createGroup() {
 
 }
 
-fun Route.getGroupsByUserId() {
+fun Route.userGroups() {
     val repository by inject<Repository>()
 
     authenticate {

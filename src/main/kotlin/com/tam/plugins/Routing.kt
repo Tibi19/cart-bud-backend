@@ -22,19 +22,27 @@ private fun Routing.authenticationRoutes() {
 
 private fun Routing.groupRoutes() {
     createGroup()
-    getGroupsByUserId()
+    userGroups()
     updateGroup()
     deleteGroup()
 }
 
 private fun Routing.invitationRoutes() {
-
+    sendInvitation()
+    getUserInvitations()
+    acceptInvitation()
 }
 
 private fun Routing.shoppingListRoutes() {
-
+    createShoppingList()
+    parentShoppingLists()
+    updateShoppingList()
+    deleteShoppingList()
 }
 
 private fun Routing.entryRoutes() {
-
+    createEntry()
+    shoppingListEntries()
+    updateEntry()
+    deleteEntry()
 }
