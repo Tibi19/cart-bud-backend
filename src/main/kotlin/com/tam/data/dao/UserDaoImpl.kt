@@ -21,4 +21,9 @@ class UserDaoImpl(database: Database) : UserDao {
     override fun insert(element: User): Boolean =
         users.tryAdd(element)
 
+    override fun getById(id: String): User? =
+        tryGet {
+            users.find { it.id eq id }
+        }
+
 }

@@ -4,10 +4,12 @@ import com.tam.data.dao.contract.entity.GroupDao
 import com.tam.data.model.entity.Group
 import com.tam.data.table.groups
 import com.tam.data.util.tryAdd
+import com.tam.data.util.tryGet
 import com.tam.data.util.tryRemoveIf
 import com.tam.data.util.tryUpdate
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
+import org.ktorm.entity.find
 
 class GroupDaoImpl(database: Database) : GroupDao {
 
@@ -21,5 +23,10 @@ class GroupDaoImpl(database: Database) : GroupDao {
 
     override fun delete(elementId: String): Boolean =
         groups.tryRemoveIf { it.id eq elementId }
+
+    override fun getById(id: String): Group? =
+        tryGet {
+            groups.find { it.id eq id }
+        }
 
 }

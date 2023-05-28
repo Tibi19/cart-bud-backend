@@ -1,8 +1,10 @@
 package com.tam.routing
 
 import com.tam.data.model.request.GroupRequest
-import com.tam.data.repository.Repository
-import com.tam.routing.util.*
+import com.tam.data.repository.contract.GroupRepository
+import com.tam.routing.util.receiveRequestInfoWithErrorHandle
+import com.tam.routing.util.receiveUserIdOrNull
+import com.tam.usecase.isGroupAdmin
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -17,7 +19,7 @@ const val ROUTE_GROUP_UPDATE = "$ROUTE_GROUP_ROOT/update"
 const val ROUTE_GROUP_DELETE = "$ROUTE_GROUP_ROOT/delete"
 
 fun Route.createGroup() {
-    val repository by inject<Repository>()
+    val repository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_GROUP_CREATE) {
@@ -38,7 +40,7 @@ fun Route.createGroup() {
 }
 
 fun Route.userGroups() {
-    val repository by inject<Repository>()
+    val repository by inject<GroupRepository>()
 
     authenticate {
         get(ROUTE_GROUP_USER_GROUPS) {
@@ -61,7 +63,7 @@ fun Route.userGroups() {
 }
 
 fun Route.updateGroup() {
-    val repository by inject<Repository>()
+    val repository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_GROUP_UPDATE) {
@@ -69,13 +71,13 @@ fun Route.updateGroup() {
                 call.respond(statusCode)
             } ?: return@post
 
-            val isGroupAdmin = repository.isGroupAdmin(group.id, userId)
+            val isGroupAdmin = isGroupAdmin(repository, group.id, userId)
             if (!isGroupAdmin) {
                 call.respond(HttpStatusCode.Forbidden)
                 return@post
             }
 
-            val isOk = repository.updateGroup(group)
+            val isOk = repository.updateGroup(group, userId)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
@@ -88,7 +90,7 @@ fun Route.updateGroup() {
 }
 
 fun Route.deleteGroup() {
-    val repository by inject<Repository>()
+    val repository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_GROUP_DELETE) {
@@ -96,7 +98,7 @@ fun Route.deleteGroup() {
                     call.respond(statusCode)
                 } ?: return@post
 
-            val isGroupAdmin = repository.isGroupAdmin(group.id, userId)
+            val isGroupAdmin = isGroupAdmin(repository, group.id, userId)
             if (!isGroupAdmin) {
                 call.respond(HttpStatusCode.Forbidden)
                 return@post

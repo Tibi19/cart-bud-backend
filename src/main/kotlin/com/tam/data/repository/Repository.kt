@@ -16,22 +16,26 @@ interface Repository {
 
     fun createUser(username: String, saltedHash: SaltedHash): Boolean
     fun getUserByUsername(username: String): User?
+    fun getUserByUserId(userId: String): User?
+
     fun createGroup(groupRequest: GroupRequest, userId: String): Boolean
     fun getGroupsByUserId(userId: String): List<GroupResponse>?
     fun isGroupAdmin(groupId: String, userId: String): Boolean
     fun updateGroup(groupRequest: GroupRequest): Boolean
+    fun deleteGroupMember(userId: String, groupId: String): Boolean
     fun deleteGroup(groupRequest: GroupRequest): Boolean
+    fun getGroupByGroupId(groupId: String): Group?
+
     fun createInvitation(fromAdminId: String, sendInvitationRequest: SendInvitationRequest): Boolean
     fun getUserInvitations(userId: String): List<InvitationResponse>?
     fun acceptInvitation(toUserId: String, onGroupId: String): Boolean
     fun deleteInvitation(toUserId: String, onGroupId: String): Boolean
-    fun deleteGroupMember(userId: String, groupId: String): Boolean
-    fun getGroupByGroupId(groupId: String): Group?
-    fun getUserByUserId(userId: String): User?
+
     fun createShoppingList(shoppingListRequest: ShoppingListRequest): Boolean
     fun getShoppingListsByParentId(parentId: String): List<ShoppingListResponse>?
     fun updateShoppingList(shoppingListRequest: ShoppingListRequest): Boolean
     fun deleteShoppingList(shoppingListRequest: ShoppingListRequest): Boolean
+
     fun createEntry(entryRequest: EntryRequest): Boolean
     fun getEntriesByParentId(parentListId: String): List<EntryResponse>?
     fun updateEntry(entryRequest: EntryRequest): Boolean
