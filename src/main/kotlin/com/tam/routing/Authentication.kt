@@ -2,7 +2,7 @@ package com.tam.routing
 
 import com.tam.data.model.request.AuthRequest
 import com.tam.data.model.response.AuthResponse
-import com.tam.data.repository.Repository
+import com.tam.data.repository.contract.UserRepository
 import com.tam.routing.util.receiveRequestOrNull
 import com.tam.security.hashing.HashingService
 import com.tam.security.hashing.SaltedHash
@@ -29,7 +29,7 @@ const val ERROR_USER_OR_PASSWORD = "Incorrect username or password"
 
 fun Route.signUp() {
     val hashingService by inject<HashingService>()
-    val repository by inject<Repository>()
+    val userRepository by inject<UserRepository>()
 
     post(ROUTE_SIGNUP) {
         val request = call.receiveRequestOrNull<AuthRequest>()
@@ -43,13 +43,13 @@ fun Route.signUp() {
             return@post
         }
 
-        repository.getUserByUsername(request.username)?.let {
+        userRepository.getUserByUsername(request.username)?.let {
             call.respond(HttpStatusCode.Conflict, ERROR_USER_EXISTS)
             return@post
         }
 
         val saltedHash = hashingService.generateSaltedHash(request.password)
-        val isOk = repository.createUser(request.username, saltedHash)
+        val isOk = userRepository.createUser(request.username, saltedHash)
 
         if (!isOk) {
             call.respond(HttpStatusCode.Conflict)
@@ -64,7 +64,7 @@ fun Route.signIn() {
     val hashingService by inject<HashingService>()
     val tokenService by inject<TokenService>()
     val tokenConfig by inject<TokenConfig>()
-    val repository by inject<Repository>()
+    val userRepository by inject<UserRepository>()
 
     post(ROUTE_SIGNIN) {
         val request = call.receiveRequestOrNull<AuthRequest>()
@@ -73,7 +73,7 @@ fun Route.signIn() {
                 return@post
             }
 
-        val user = repository.getUserByUsername(request.username)
+        val user = userRepository.getUserByUsername(request.username)
             ?: run {
                 call.respond(HttpStatusCode.Conflict, ERROR_USER_OR_PASSWORD)
                 return@post

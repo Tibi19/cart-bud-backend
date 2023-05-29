@@ -3,9 +3,8 @@ package com.tam.di
 import org.koin.dsl.module
 import org.ktorm.database.Database
 
-val dataModule = module {
+val databaseModule = module {
     single<Database> { provideDatabase() }
-    // TODO add repository provision
 }
 
 const val DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/mock_db" // TODO change to cartbud db pass

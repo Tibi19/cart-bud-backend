@@ -2,7 +2,9 @@ package com.tam.routing
 
 import com.tam.data.model.request.ParentListsRequest
 import com.tam.data.model.request.ShoppingListRequest
-import com.tam.data.repository.Repository
+import com.tam.data.repository.contract.GroupRepository
+import com.tam.data.repository.contract.ShoppingListRepository
+import com.tam.data.repository.contract.UserRepository
 import com.tam.routing.util.receiveRequestOrNull
 import com.tam.usecase.validateParent
 import io.ktor.http.*
@@ -19,17 +21,17 @@ const val ROUTE_LIST_UPDATE = "$ROUTE_LIST_ROOT/update"
 const val ROUTE_LIST_DELETE = "$ROUTE_LIST_ROOT/delete"
 
 fun Route.createShoppingList() {
-    val repository by inject<Repository>()
+    val shoppingListRepository by inject<ShoppingListRepository>()
 
     authenticate {
         post(ROUTE_LIST_CREATE) {
-            val shoppingListRequest = call.receiveShoppingListRequestAndValidate(repository)
+            val shoppingListRequest = call.receiveShoppingListRequestAndValidate()
                 ?: run {
                     call.respond(HttpStatusCode.BadRequest)
                     return@post
                 }
 
-            val isOk = repository.createShoppingList(shoppingListRequest)
+            val isOk = shoppingListRepository.createShoppingList(shoppingListRequest)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
@@ -41,11 +43,12 @@ fun Route.createShoppingList() {
 
 }
 
-private suspend fun ApplicationCall.receiveShoppingListRequestAndValidate(
-    repository: Repository
-): ShoppingListRequest? {
+private suspend fun ApplicationCall.receiveShoppingListRequestAndValidate(): ShoppingListRequest? {
+    val groupRepository by inject<GroupRepository>()
+    val userRepository by inject<UserRepository>()
+
     val shoppingListRequest = receiveRequestOrNull<ShoppingListRequest>() ?: return null
-    val isValidParent = shoppingListRequest.validateParent(repository)
+    val isValidParent = shoppingListRequest.validateParent(groupRepository, userRepository)
     if (!isValidParent) {
         return null
     }
@@ -53,7 +56,7 @@ private suspend fun ApplicationCall.receiveShoppingListRequestAndValidate(
 }
 
 fun Route.parentShoppingLists() {
-    val repository by inject<Repository>()
+    val shoppingListRepository by inject<ShoppingListRepository>()
 
     authenticate {
         get(ROUTE_LIST_PARENT_LISTS) {
@@ -63,7 +66,7 @@ fun Route.parentShoppingLists() {
                     return@get
                 }
 
-            val shoppingLists = repository.getShoppingListsByParentId(parentListsRequest.parentId)
+            val shoppingLists = shoppingListRepository.getShoppingListsByParentId(parentListsRequest.parentId)
                 ?: run {
                     call.respond(HttpStatusCode.InternalServerError)
                     return@get
@@ -76,17 +79,17 @@ fun Route.parentShoppingLists() {
 }
 
 fun Route.updateShoppingList() {
-    val repository by inject<Repository>()
+    val shoppingListRepository by inject<ShoppingListRepository>()
 
     authenticate {
         post(ROUTE_LIST_UPDATE) {
-            val shoppingListRequest = call.receiveShoppingListRequestAndValidate(repository)
+            val shoppingListRequest = call.receiveShoppingListRequestAndValidate()
                 ?: run {
                     call.respond(HttpStatusCode.BadRequest)
                     return@post
                 }
 
-            val isOk = repository.updateShoppingList(shoppingListRequest)
+            val isOk = shoppingListRepository.updateShoppingList(shoppingListRequest)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
@@ -99,17 +102,17 @@ fun Route.updateShoppingList() {
 }
 
 fun Route.deleteShoppingList() {
-    val repository by inject<Repository>()
+    val shoppingListRepository by inject<ShoppingListRepository>()
 
     authenticate {
         post(ROUTE_LIST_DELETE) {
-            val shoppingListRequest = call.receiveShoppingListRequestAndValidate(repository)
+            val shoppingListRequest = call.receiveShoppingListRequestAndValidate()
                 ?: run {
                     call.respond(HttpStatusCode.BadRequest)
                     return@post
                 }
 
-            val isOk = repository.deleteShoppingList(shoppingListRequest)
+            val isOk = shoppingListRepository.deleteShoppingList(shoppingListRequest)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post

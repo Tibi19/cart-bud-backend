@@ -2,7 +2,8 @@ package com.tam.routing
 
 import com.tam.data.model.request.AcceptInvitationRequest
 import com.tam.data.model.request.SendInvitationRequest
-import com.tam.data.repository.Repository
+import com.tam.data.repository.contract.GroupRepository
+import com.tam.data.repository.contract.InvitationRepository
 import com.tam.routing.util.receiveRequestInfoWithErrorHandle
 import com.tam.routing.util.receiveUserIdOrNull
 import io.ktor.http.*
@@ -18,7 +19,7 @@ const val ROUTE_INVITATION_USER_INVITATIONS = "$ROUTE_INVITATION_ROOT/user/invit
 const val ROUTE_INVITATION_ACCEPT = "$ROUTE_INVITATION_ROOT/accept"
 
 fun Route.sendInvitation() {
-    val repository by inject<Repository>()
+    val invitationRepository by inject<InvitationRepository>()
 
     authenticate {
         post(ROUTE_INVITATION_SEND) {
@@ -26,7 +27,7 @@ fun Route.sendInvitation() {
                 call.respond(statusCode)
             } ?: return@post
 
-            val isOk = repository.createInvitation(userId, invitation)
+            val isOk = invitationRepository.createInvitation(userId, invitation)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
@@ -39,7 +40,7 @@ fun Route.sendInvitation() {
 }
 
 fun Route.getUserInvitations() {
-    val repository by inject<Repository>()
+    val invitationRepository by inject<InvitationRepository>()
 
     authenticate {
         get(ROUTE_INVITATION_USER_INVITATIONS) {
@@ -49,7 +50,7 @@ fun Route.getUserInvitations() {
                     return@get
                 }
 
-            val userInvitations = repository.getUserInvitations(userId)
+            val userInvitations = invitationRepository.getUserInvitations(userId)
                 ?: run {
                     call.respond(HttpStatusCode.InternalServerError)
                     return@get
@@ -62,7 +63,8 @@ fun Route.getUserInvitations() {
 }
 
 fun Route.acceptInvitation() {
-    val repository by inject<Repository>()
+    val invitationRepository by inject<InvitationRepository>()
+    val groupRepository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_INVITATION_ACCEPT) {
@@ -70,15 +72,15 @@ fun Route.acceptInvitation() {
                 call.respond(HttpStatusCode.Unauthorized)
             } ?: return@post
 
-            val isAcceptOk = repository.acceptInvitation(userId, invitation.onGroupId)
+            val isAcceptOk = invitationRepository.acceptInvitation(userId, invitation.onGroupId)
             if (!isAcceptOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
             }
 
-            val isDeleteOk = repository.deleteInvitation(userId, invitation.onGroupId)
+            val isDeleteOk = invitationRepository.deleteInvitation(userId, invitation.onGroupId)
             if (!isDeleteOk) {
-                repository.deleteGroupMember(userId, invitation.onGroupId)
+                groupRepository.deleteGroupMember(userId, invitation.onGroupId)
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
             }
@@ -86,4 +88,5 @@ fun Route.acceptInvitation() {
             call.respond(HttpStatusCode.OK)
         }
     }
+
 }

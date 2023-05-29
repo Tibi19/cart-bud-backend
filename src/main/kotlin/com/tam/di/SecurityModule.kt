@@ -7,14 +7,14 @@ import com.tam.security.token.TokenConfig
 import com.tam.security.token.TokenService
 import io.ktor.server.application.*
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 fun securityModule(environment: ApplicationEnvironment): Module =
     module {
-        singleOf(::JwtTokenService) { bind<TokenService>() }
-        singleOf(::SHA256HashingService) { bind<HashingService>() }
+        singleOf(::JwtTokenService) bind TokenService::class
+        singleOf(::SHA256HashingService) bind HashingService::class
         single<TokenConfig> { provideTokenConfig(environment) }
     }
 

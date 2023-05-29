@@ -2,7 +2,7 @@ package com.tam.routing
 
 import com.tam.data.model.request.EntryRequest
 import com.tam.data.model.request.ShoppingListEntriesRequest
-import com.tam.data.repository.Repository
+import com.tam.data.repository.contract.EntryRepository
 import com.tam.routing.util.receiveRequestOrNull
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -18,7 +18,7 @@ const val ROUTE_ENTRY_UPDATE = "$ROUTE_ENTRY_ROOT/update"
 const val ROUTE_ENTRY_DELETE = "$ROUTE_ENTRY_ROOT/delete"
 
 fun Route.createEntry() {
-    val repository by inject<Repository>()
+    val entryRepository by inject<EntryRepository>()
 
     authenticate {
         post(ROUTE_ENTRY_CREATE) {
@@ -28,7 +28,7 @@ fun Route.createEntry() {
                     return@post
                 }
 
-            val isOk = repository.createEntry(entryRequest)
+            val isOk = entryRepository.createEntry(entryRequest)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
@@ -41,7 +41,7 @@ fun Route.createEntry() {
 }
 
 fun Route.shoppingListEntries() {
-    val repository by inject<Repository>()
+    val entryRepository by inject<EntryRepository>()
 
     authenticate {
         get(ROUTE_ENTRY_LIST_ENTRIES) {
@@ -51,7 +51,7 @@ fun Route.shoppingListEntries() {
                     return@get
                 }
 
-            val shoppingListEntries = repository.getEntriesByParentId(shoppingListEntriesRequest.parentListId)
+            val shoppingListEntries = entryRepository.getEntriesByParentId(shoppingListEntriesRequest.parentListId)
                 ?: run {
                     call.respond(HttpStatusCode.InternalServerError)
                     return@get
@@ -64,7 +64,7 @@ fun Route.shoppingListEntries() {
 }
 
 fun Route.updateEntry() {
-    val repository by inject<Repository>()
+    val entryRepository by inject<EntryRepository>()
 
     authenticate {
         post(ROUTE_ENTRY_UPDATE) {
@@ -74,7 +74,7 @@ fun Route.updateEntry() {
                     return@post
                 }
 
-            val isOk = repository.updateEntry(entryRequest)
+            val isOk = entryRepository.updateEntry(entryRequest)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
@@ -87,7 +87,7 @@ fun Route.updateEntry() {
 }
 
 fun Route.deleteEntry() {
-    val repository by inject<Repository>()
+    val entryRepository by inject<EntryRepository>()
 
     authenticate {
         post(ROUTE_ENTRY_DELETE) {
@@ -97,7 +97,7 @@ fun Route.deleteEntry() {
                     return@post
                 }
 
-            val isOk = repository.deleteEntry(entryRequest)
+            val isOk = entryRepository.deleteEntry(entryRequest)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
