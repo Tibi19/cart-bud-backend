@@ -15,5 +15,5 @@ private fun AuthRequest.validateUsername() =
 private fun AuthRequest.validatePassword() =
     password.isNotBlank()
             && password.length >= MINIMUM_PASS_LENGTH
-            && password.contains(REGEX_CONTAINS_DIGITS)
-            && password.contains(REGEX_CONTAINS_UPPERCASE)
+            && password.contains(Regex(REGEX_CONTAINS_DIGITS))
+            && password.contains(Regex(REGEX_CONTAINS_UPPERCASE))

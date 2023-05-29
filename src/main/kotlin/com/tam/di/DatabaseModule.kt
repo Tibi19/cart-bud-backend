@@ -7,13 +7,13 @@ val databaseModule = module {
     single<Database> { provideDatabase() }
 }
 
-const val DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/mock_db" // TODO change to cartbud db pass
-const val DB_USER = "root" // TODO move to environment variables
-const val ENVIRONMENT_DB_PASSWORD = "MOCK_DB_PW" // TODO add cartbud db pass
+const val DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/cart_bud_db"
+const val ENVIRONMENT_DB_USER = "CART_BUD_DB_USER"
+const val ENVIRONMENT_DB_PASSWORD = "CART_BUD_DB_PW"
 
 private fun provideDatabase(): Database =
     Database.connect(
         url = DB_CONNECTION_URL,
-        user = DB_USER,
-        password = ENVIRONMENT_DB_PASSWORD
+        user = System.getenv(ENVIRONMENT_DB_USER),
+        password = System.getenv(ENVIRONMENT_DB_PASSWORD)
     )

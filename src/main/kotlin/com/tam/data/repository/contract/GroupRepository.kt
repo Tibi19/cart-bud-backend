@@ -6,6 +6,7 @@ import com.tam.data.model.response.GroupResponse
 
 interface GroupRepository {
     fun createGroup(groupRequest: GroupRequest, userId: String): Boolean
+    fun createGroupMember(userId: String, groupId: String): Boolean
     fun getGroupsByUserId(userId: String): List<GroupResponse>?
     fun updateGroup(groupRequest: GroupRequest, adminId: String): Boolean
     fun deleteGroupMember(userId: String, groupId: String): Boolean

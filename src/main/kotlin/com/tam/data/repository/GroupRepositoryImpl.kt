@@ -6,6 +6,7 @@ import com.tam.data.dao.contract.entity.UserDao
 import com.tam.data.mapper.toGroup
 import com.tam.data.mapper.toGroupResponse
 import com.tam.data.model.entity.Group
+import com.tam.data.model.entity.Member
 import com.tam.data.model.request.GroupRequest
 import com.tam.data.model.response.GroupResponse
 import com.tam.data.repository.contract.GroupRepository
@@ -19,6 +20,16 @@ class GroupRepositoryImpl(
     override fun createGroup(groupRequest: GroupRequest, userId: String): Boolean {
         val admin = userDao.getById(userId) ?: return false
         return groupDao.insert(groupRequest.toGroup(admin))
+    }
+
+    override fun createGroupMember(userId: String, groupId: String): Boolean {
+        val user = userDao.getById(userId) ?: return false
+        val group = groupDao.getById(groupId) ?: return false
+        val newGroupMember = Member.create(
+            user = user,
+            group = group
+        )
+        return memberDao.insert(newGroupMember)
     }
 
     override fun getGroupsByUserId(userId: String): List<GroupResponse>? =

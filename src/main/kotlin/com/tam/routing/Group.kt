@@ -19,7 +19,7 @@ const val ROUTE_GROUP_UPDATE = "$ROUTE_GROUP_ROOT/update"
 const val ROUTE_GROUP_DELETE = "$ROUTE_GROUP_ROOT/delete"
 
 fun Route.createGroup() {
-    val repository by inject<GroupRepository>()
+    val groupRepository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_GROUP_CREATE) {
@@ -27,8 +27,14 @@ fun Route.createGroup() {
                 call.respond(statusCode)
             } ?: return@post
 
-            val isOk = repository.createGroup(group, userId)
-            if (!isOk) {
+            val isCreateOk = groupRepository.createGroup(group, userId)
+            if (!isCreateOk) {
+                call.respond(HttpStatusCode.InternalServerError)
+                return@post
+            }
+
+            val isAddMemberOk = groupRepository.createGroupMember(userId, group.id)
+            if (!isAddMemberOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
             }
@@ -40,7 +46,7 @@ fun Route.createGroup() {
 }
 
 fun Route.userGroups() {
-    val repository by inject<GroupRepository>()
+    val groupRepository by inject<GroupRepository>()
 
     authenticate {
         get(ROUTE_GROUP_USER_GROUPS) {
@@ -50,7 +56,7 @@ fun Route.userGroups() {
                     return@get
                 }
 
-            val userGroups = repository.getGroupsByUserId(userId)
+            val userGroups = groupRepository.getGroupsByUserId(userId)
                 ?: run {
                     call.respond(HttpStatusCode.InternalServerError)
                     return@get
@@ -63,7 +69,7 @@ fun Route.userGroups() {
 }
 
 fun Route.updateGroup() {
-    val repository by inject<GroupRepository>()
+    val groupRepository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_GROUP_UPDATE) {
@@ -71,13 +77,13 @@ fun Route.updateGroup() {
                 call.respond(statusCode)
             } ?: return@post
 
-            val isGroupAdmin = isGroupAdmin(repository, group.id, userId)
+            val isGroupAdmin = isGroupAdmin(groupRepository, group.id, userId)
             if (!isGroupAdmin) {
                 call.respond(HttpStatusCode.Forbidden)
                 return@post
             }
 
-            val isOk = repository.updateGroup(group, userId)
+            val isOk = groupRepository.updateGroup(group, userId)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
@@ -90,7 +96,7 @@ fun Route.updateGroup() {
 }
 
 fun Route.deleteGroup() {
-    val repository by inject<GroupRepository>()
+    val groupRepository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_GROUP_DELETE) {
@@ -98,13 +104,13 @@ fun Route.deleteGroup() {
                     call.respond(statusCode)
                 } ?: return@post
 
-            val isGroupAdmin = isGroupAdmin(repository, group.id, userId)
+            val isGroupAdmin = isGroupAdmin(groupRepository, group.id, userId)
             if (!isGroupAdmin) {
                 call.respond(HttpStatusCode.Forbidden)
                 return@post
             }
 
-            val isOk = repository.deleteGroup(group)
+            val isOk = groupRepository.deleteGroup(group)
             if (!isOk) {
                 call.respond(HttpStatusCode.InternalServerError)
                 return@post
