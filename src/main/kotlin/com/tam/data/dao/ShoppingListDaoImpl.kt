@@ -10,6 +10,7 @@ import com.tam.data.util.tryUpdate
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.entity.filter
+import org.ktorm.entity.find
 import org.ktorm.entity.toList
 
 class ShoppingListDaoImpl(database: Database) : ShoppingListDao {
@@ -24,6 +25,11 @@ class ShoppingListDaoImpl(database: Database) : ShoppingListDao {
 
     override fun delete(elementId: String): Boolean =
         shoppingLists.tryRemoveIf { it.id eq elementId }
+
+    override fun getById(id: String): ShoppingList? =
+        tryGet {
+            shoppingLists.find { it.id eq id }
+        }
 
     override fun getAllByParentId(parentId: String): List<ShoppingList>? =
         tryGet {

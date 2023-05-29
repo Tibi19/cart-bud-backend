@@ -18,12 +18,7 @@ class GroupRepositoryImpl(
 
     override fun createGroup(groupRequest: GroupRequest, userId: String): Boolean {
         val admin = userDao.getById(userId) ?: return false
-        val newGroup = Group.create(
-            id = groupRequest.id,
-            admin = admin,
-            name = groupRequest.name
-        )
-        return groupDao.insert(newGroup)
+        return groupDao.insert(groupRequest.toGroup(admin))
     }
 
     override fun getGroupsByUserId(userId: String): List<GroupResponse>? =
