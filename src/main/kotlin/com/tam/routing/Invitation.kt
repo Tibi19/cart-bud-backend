@@ -6,6 +6,8 @@ import com.tam.data.repository.contract.GroupRepository
 import com.tam.data.repository.contract.InvitationRepository
 import com.tam.routing.util.receiveRequestInfoWithErrorHandle
 import com.tam.routing.util.receiveUserIdOrNull
+import com.tam.usecase.hasInvitation
+import com.tam.usecase.isGroupAdmin
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -20,12 +22,19 @@ const val ROUTE_INVITATION_ACCEPT = "$ROUTE_INVITATION_ROOT/accept"
 
 fun Route.sendInvitation() {
     val invitationRepository by inject<InvitationRepository>()
+    val groupRepository by inject<GroupRepository>()
 
     authenticate {
         post(ROUTE_INVITATION_SEND) {
             val (userId, invitation) = call.receiveRequestInfoWithErrorHandle<SendInvitationRequest> { statusCode ->
                 call.respond(statusCode)
             } ?: return@post
+
+            val isGroupAdmin = isGroupAdmin(groupRepository, invitation.onGroupId, userId)
+            if (!isGroupAdmin) {
+                call.respond(HttpStatusCode.Forbidden)
+                return@post
+            }
 
             val isOk = invitationRepository.createInvitation(userId, invitation)
             if (!isOk) {
@@ -71,6 +80,12 @@ fun Route.acceptInvitation() {
             val (userId, invitation) = call.receiveRequestInfoWithErrorHandle<AcceptInvitationRequest> {
                 call.respond(HttpStatusCode.Unauthorized)
             } ?: return@post
+
+            val hasInvitation = hasInvitation(invitationRepository, invitation.onGroupId, userId)
+            if (!hasInvitation) {
+                call.respond(HttpStatusCode.Forbidden)
+                return@post
+            }
 
             val isAcceptOk = invitationRepository.acceptInvitation(userId, invitation.onGroupId)
             if (!isAcceptOk) {

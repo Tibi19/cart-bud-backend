@@ -19,6 +19,19 @@ fun <E : Entity<E>, T : Table<E>> EntitySequence<E, T>.tryRemoveIf(predicate: (T
         removeIf(predicate)
     }
 
+/**
+ * Alternative to tryRemoveIf which doesn't support predicates requiring joined tables
+ */
+fun <E : Entity<E>, T : Table<E>> EntitySequence<E, T>.tryDeleteIf(predicate: (T) -> ColumnDeclaring<Boolean>): Boolean {
+    val element = tryGet {
+        find(predicate)
+    } ?: return false
+
+    return tryOperation {
+        element.delete()
+    }
+}
+
 private inline fun tryOperation(operation: () -> Unit): Boolean =
     try {
         operation()

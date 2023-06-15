@@ -21,11 +21,10 @@ class InvitationRepositoryImpl(
     override fun createInvitation(fromAdminId: String, sendInvitationRequest: SendInvitationRequest): Boolean {
         val toUser = userDao.getUserByUsername(sendInvitationRequest.toUsername) ?: return false
         val onGroup = groupDao.getById(sendInvitationRequest.onGroupId) ?: return false
-        val fromAdmin = userDao.getById(fromAdminId) ?: return false
         val invitation = Invitation.create(
             user = toUser,
             group = onGroup,
-            admin = fromAdmin
+            adminId = fromAdminId
         )
         return invitationDao.insert(invitation)
     }
@@ -34,7 +33,8 @@ class InvitationRepositoryImpl(
         invitationDao
             .getInvitationsOfUserId(userId)
             ?.map { invitation ->
-                invitation.toInvitationResponse()
+                val admin = userDao.getById(invitation.adminId) ?: return null
+                invitation.toInvitationResponse(admin)
             }
 
     override fun acceptInvitation(toUserId: String, onGroupId: String): Boolean {
