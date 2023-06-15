@@ -27,7 +27,9 @@ class EntryRepositoryImpl(
 
     override fun updateEntry(entryRequest: EntryRequest): Boolean {
         val shoppingListParent = shoppingListDao.getById(entryRequest.parentListId) ?: return false
-        return entryDao.update(entryRequest.toEntry(shoppingListParent))
+        val entry = entryDao.getById(entryRequest.id) ?: return false
+        val changedEntry = entryRequest.toEntry(shoppingListParent, entry.pk)
+        return entryDao.update(changedEntry)
     }
 
     override fun deleteEntry(entryRequest: EntryRequest): Boolean =

@@ -3,7 +3,7 @@ package com.tam.data.model.entity
 import org.ktorm.entity.Entity
 
 interface Entry : Entity<Entry> {
-    val pk: Int
+    var pk: Int
     var id: String
     var parent: ShoppingList
     var text: String
@@ -16,9 +16,11 @@ interface Entry : Entity<Entry> {
             parent: ShoppingList,
             text: String,
             isChecked: Boolean,
-            timestampOfLastChange: Long
+            timestampOfLastChange: Long,
+            pk: Int = 0
         ): Entry =
             Entry {
+                this.pk = pk
                 this.id = id
                 this.parent = parent
                 this.text = text

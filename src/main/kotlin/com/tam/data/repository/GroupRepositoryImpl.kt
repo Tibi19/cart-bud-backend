@@ -19,7 +19,8 @@ class GroupRepositoryImpl(
 
     override fun createGroup(groupRequest: GroupRequest, userId: String): Boolean {
         val admin = userDao.getById(userId) ?: return false
-        return groupDao.insert(groupRequest.toGroup(admin))
+        val group = groupRequest.toGroup(admin)
+        return groupDao.insert(group)
     }
 
     override fun createGroupMember(userId: String, groupId: String): Boolean {
@@ -41,7 +42,9 @@ class GroupRepositoryImpl(
 
     override fun updateGroup(groupRequest: GroupRequest, adminId: String): Boolean {
         val admin = userDao.getById(adminId) ?: return false
-        return groupDao.update(groupRequest.toGroup(admin))
+        val group = groupDao.getById(groupRequest.id) ?: return false
+        val changedGroup = groupRequest.toGroup(admin, group.pk)
+        return groupDao.update(changedGroup)
     }
 
     override fun deleteGroupMember(userId: String, groupId: String): Boolean =

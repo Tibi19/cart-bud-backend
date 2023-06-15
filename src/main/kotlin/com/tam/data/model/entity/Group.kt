@@ -3,7 +3,7 @@ package com.tam.data.model.entity
 import org.ktorm.entity.Entity
 
 interface Group : Entity<Group> {
-    val pk: Int
+    var pk: Int
     var id: String
     var admin: User
     var name: String
@@ -12,9 +12,11 @@ interface Group : Entity<Group> {
         fun create(
             id: String,
             admin: User,
-            name: String
+            name: String,
+            pk: Int = 0
         ): Group =
             Group {
+                this.pk = pk
                 this.id = id
                 this.admin = admin
                 this.name = name

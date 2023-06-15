@@ -13,8 +13,9 @@ fun Group.toGroupResponse(memberId: String): GroupResponse =
         isAdmin = admin.id == memberId
     )
 
-fun GroupRequest.toGroup(admin: User): Group =
+fun GroupRequest.toGroup(admin: User, pk: Int = 0): Group =
     Group.create(
+        pk = pk,
         id = id,
         admin = admin,
         name = name

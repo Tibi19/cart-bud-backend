@@ -5,8 +5,9 @@ import com.tam.data.model.entity.ShoppingList
 import com.tam.data.model.request.EntryRequest
 import com.tam.data.model.response.EntryResponse
 
-fun EntryRequest.toEntry(parent: ShoppingList): Entry =
+fun EntryRequest.toEntry(parent: ShoppingList, pk: Int = 0): Entry =
     Entry.create(
+        pk = pk,
         id = id,
         parent = parent,
         text = text,

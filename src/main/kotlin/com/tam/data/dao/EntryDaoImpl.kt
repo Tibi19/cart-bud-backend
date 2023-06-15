@@ -11,6 +11,7 @@ import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.entity.filter
 import org.ktorm.entity.toList
+import org.ktorm.entity.find
 
 class EntryDaoImpl(database: Database) : EntryDao {
 
@@ -30,6 +31,11 @@ class EntryDaoImpl(database: Database) : EntryDao {
             entries
                 .filter { it.parent.id eq parentId }
                 .toList()
+        }
+
+    override fun getById(id: String): Entry? =
+        tryGet {
+            entries.find { it.id eq id }
         }
 
 }
