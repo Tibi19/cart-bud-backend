@@ -6,6 +6,7 @@ import com.tam.data.repository.contract.GroupRepository
 import com.tam.data.repository.contract.ShoppingListRepository
 import com.tam.data.repository.contract.UserRepository
 import com.tam.routing.util.receiveRequestOrNull
+import com.tam.routing.util.receiveUserIdOrNull
 import com.tam.usecase.validateParent
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -47,8 +48,9 @@ private suspend fun ApplicationCall.receiveShoppingListRequestAndValidate(): Sho
     val groupRepository by inject<GroupRepository>()
     val userRepository by inject<UserRepository>()
 
+    val userId = receiveUserIdOrNull() ?: return null
     val shoppingListRequest = receiveRequestOrNull<ShoppingListRequest>() ?: return null
-    val isValidParent = shoppingListRequest.validateParent(groupRepository, userRepository)
+    val isValidParent = shoppingListRequest.validateParent(userId, groupRepository, userRepository)
     if (!isValidParent) {
         return null
     }
