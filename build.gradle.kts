@@ -48,4 +48,7 @@ dependencies {
 
     // Authentication
     implementation("commons-codec:commons-codec:$commons_codec_version")
+
+    // CORS
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
 }

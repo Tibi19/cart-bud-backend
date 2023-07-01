@@ -11,6 +11,7 @@ fun Application.module() {
     configureDependencyInjection(environment)
     configureMonitoring()
     configureSerialization()
+    configureCors()
     configureSecurity()
     configureRouting()
 }
