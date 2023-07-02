@@ -12,4 +12,5 @@ interface GroupRepository {
     fun deleteGroupMember(userId: String, groupId: String): Boolean
     fun deleteGroup(groupRequest: GroupRequest): Boolean
     fun getGroupById(groupId: String): Group?
+    fun getGroupsByIds(userId: String, ids: List<String>): List<GroupResponse>?
 }

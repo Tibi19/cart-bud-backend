@@ -8,4 +8,5 @@ interface EntryRepository {
     fun getEntriesByParentId(parentListId: String): List<EntryResponse>?
     fun updateEntry(entryRequest: EntryRequest): Boolean
     fun deleteEntry(entryRequest: EntryRequest): Boolean
+    fun getEntriesByIds(ids: List<String>): List<EntryResponse>?
 }

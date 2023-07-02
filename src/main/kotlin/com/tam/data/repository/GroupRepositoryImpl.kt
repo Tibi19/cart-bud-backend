@@ -5,6 +5,7 @@ import com.tam.data.dao.contract.entity.MemberDao
 import com.tam.data.dao.contract.entity.UserDao
 import com.tam.data.mapper.toGroup
 import com.tam.data.mapper.toGroupResponse
+import com.tam.data.mapper.toGroupResponses
 import com.tam.data.model.entity.Group
 import com.tam.data.model.entity.Member
 import com.tam.data.model.request.GroupRequest
@@ -55,5 +56,10 @@ class GroupRepositoryImpl(
 
     override fun getGroupById(groupId: String): Group? =
         groupDao.getById(groupId)
+
+    override fun getGroupsByIds(userId: String, ids: List<String>): List<GroupResponse>? =
+        groupDao
+            .getByIds(ids)
+            ?.toGroupResponses(userId)
 
 }

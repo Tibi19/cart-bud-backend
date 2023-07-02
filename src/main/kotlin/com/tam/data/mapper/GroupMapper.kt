@@ -10,13 +10,23 @@ fun Group.toGroupResponse(memberId: String): GroupResponse =
         id = id,
         name = name,
         adminName = admin.username,
-        isAdmin = admin.id == memberId
+        isAdmin = admin.id == memberId,
+        timestampOfLastChange = timestampOfLastChange
     )
 
-fun GroupRequest.toGroup(admin: User, pk: Int = 0): Group =
+fun GroupRequest.toGroup(
+    admin: User,
+    pk: Int = 0
+): Group =
     Group.create(
         pk = pk,
         id = id,
         admin = admin,
-        name = name
+        name = name,
+        timestampOfLastChange = timestampOfLastChange
     )
+
+fun List<Group>.toGroupResponses(memberId: String): List<GroupResponse> =
+    map {
+        it.toGroupResponse(memberId)
+    }

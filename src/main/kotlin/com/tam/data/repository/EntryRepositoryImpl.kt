@@ -4,6 +4,7 @@ import com.tam.data.dao.contract.entity.EntryDao
 import com.tam.data.dao.contract.entity.ShoppingListDao
 import com.tam.data.mapper.toEntry
 import com.tam.data.mapper.toEntryResponse
+import com.tam.data.mapper.toEntryResponses
 import com.tam.data.model.request.EntryRequest
 import com.tam.data.model.response.EntryResponse
 import com.tam.data.repository.contract.EntryRepository
@@ -34,5 +35,10 @@ class EntryRepositoryImpl(
 
     override fun deleteEntry(entryRequest: EntryRequest): Boolean =
         entryDao.delete(entryRequest.id)
+
+    override fun getEntriesByIds(ids: List<String>): List<EntryResponse>? =
+        entryDao
+            .getByIds(ids)
+            ?.toEntryResponses()
 
 }

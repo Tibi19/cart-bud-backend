@@ -22,3 +22,8 @@ fun ShoppingList.toShoppingListResponse(): ShoppingListResponse =
         hasGroupParent = hasGroupParent,
         timestampOfLastChange = timestampOfLastChange
     )
+
+fun List<ShoppingList>.toShoppingListResponses(): List<ShoppingListResponse> =
+    map {
+        it.toShoppingListResponse()
+    }

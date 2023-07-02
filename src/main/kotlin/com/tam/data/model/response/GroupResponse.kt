@@ -7,5 +7,6 @@ data class GroupResponse(
     val id: String,
     val name: String,
     val adminName: String,
-    val isAdmin: Boolean
+    val isAdmin: Boolean,
+    val timestampOfLastChange: Long
 )

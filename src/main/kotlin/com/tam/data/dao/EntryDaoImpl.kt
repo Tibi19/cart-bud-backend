@@ -9,6 +9,7 @@ import com.tam.data.util.tryRemoveIf
 import com.tam.data.util.tryUpdate
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.inList
 import org.ktorm.entity.filter
 import org.ktorm.entity.toList
 import org.ktorm.entity.find
@@ -36,6 +37,13 @@ class EntryDaoImpl(database: Database) : EntryDao {
     override fun getById(id: String): Entry? =
         tryGet {
             entries.find { it.id eq id }
+        }
+
+    override fun getByIds(ids: List<String>): List<Entry>? =
+        tryGet {
+            entries
+                .filter { it.id inList ids }
+                .toList()
         }
 
 }

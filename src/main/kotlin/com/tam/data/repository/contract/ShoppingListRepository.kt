@@ -8,4 +8,5 @@ interface ShoppingListRepository {
     fun getShoppingListsByParentId(parentId: String): List<ShoppingListResponse>?
     fun updateShoppingList(shoppingListRequest: ShoppingListRequest): Boolean
     fun deleteShoppingList(shoppingListRequest: ShoppingListRequest): Boolean
+    fun getShoppingListsByIds(ids: List<String>): List<ShoppingListResponse>?
 }

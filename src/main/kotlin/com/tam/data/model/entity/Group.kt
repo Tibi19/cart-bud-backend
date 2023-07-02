@@ -7,12 +7,14 @@ interface Group : Entity<Group> {
     var id: String
     var admin: User
     var name: String
+    var timestampOfLastChange: Long
 
     companion object : Entity.Factory<Group>() {
         fun create(
             id: String,
             admin: User,
             name: String,
+            timestampOfLastChange: Long,
             pk: Int = 0
         ): Group =
             Group {
@@ -20,6 +22,7 @@ interface Group : Entity<Group> {
                 this.id = id
                 this.admin = admin
                 this.name = name
+                this.timestampOfLastChange = timestampOfLastChange
             }
     }
 

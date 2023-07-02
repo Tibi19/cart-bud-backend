@@ -23,3 +23,8 @@ fun Entry.toEntryResponse(): EntryResponse =
         isCompleted = isChecked,
         timestampOfLastChange = timestampOfLastChange
     )
+
+fun List<Entry>.toEntryResponses(): List<EntryResponse> =
+    map {
+        it.toEntryResponse()
+    }

@@ -11,6 +11,8 @@ fun Application.configureRouting() {
         invitationRoutes()
         shoppingListRoutes()
         entryRoutes()
+
+        changes()
     }
 }
 
