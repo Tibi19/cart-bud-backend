@@ -6,4 +6,4 @@ fun doChangesExist(vararg changes: Changes<*>) =
     }
 
 private fun <T> Changes<T>.doChangesExist() =
-    updated.isNotEmpty() && deletedIds.isNotEmpty()
+    updated.isNotEmpty() || deletedIds.isNotEmpty()

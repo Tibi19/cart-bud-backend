@@ -5,6 +5,7 @@ import com.tam.data.model.request.ChangingType
 import com.tam.data.model.response.EntryResponse
 import com.tam.data.model.response.GroupResponse
 import com.tam.data.model.response.ShoppingListResponse
+import org.koin.core.component.getScopeName
 
 data class Changes<T>(
     val updated: List<T>,
@@ -34,7 +35,7 @@ inline fun <reified T> getChanges(
     changingType: ChangingType,
     getByIds: (ids: List<String>) -> List<T>?
 ): Changes<T>? {
-    if (T::class.java.name != changingType.responseName) return null
+    if (T::class.java.simpleName != changingType.responseName) return null
 
     val ids = changeRequests.map { it.id }
     val elements = getByIds(ids) ?: return null
