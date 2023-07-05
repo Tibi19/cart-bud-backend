@@ -37,7 +37,8 @@ private fun Routing.invitationRoutes() {
 
 private fun Routing.shoppingListRoutes() {
     createShoppingList()
-    parentShoppingLists()
+    userShoppingLists()
+    groupShoppingLists()
     updateShoppingList()
     deleteShoppingList()
 }

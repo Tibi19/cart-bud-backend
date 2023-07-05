@@ -2,9 +2,9 @@ package com.tam.usecase
 
 import com.tam.data.model.request.AuthRequest
 
-const val MINIMUM_PASS_LENGTH = 8
-const val REGEX_CONTAINS_UPPERCASE = "(.*[A-Z].*)"
-const val REGEX_CONTAINS_DIGITS = "(.*\\d.*)"
+private const val MINIMUM_PASS_LENGTH = 8
+private const val REGEX_CONTAINS_UPPERCASE = "(.*[A-Z].*)"
+private const val REGEX_CONTAINS_DIGITS = "(.*\\d.*)"
 
 fun AuthRequest.validate(): Boolean =
     validateUsername() && validatePassword()

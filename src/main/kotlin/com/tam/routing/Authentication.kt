@@ -17,15 +17,15 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-const val ROUTE_SIGNUP = "signup"
-const val ROUTE_SIGNIN = "signin"
-const val ROUTE_AUTHENTICATE = "authenticate"
+private const val ROUTE_SIGNUP = "signup"
+private const val ROUTE_SIGNIN = "signin"
+private const val ROUTE_AUTHENTICATE = "authenticate"
 
-const val KEY_USER_ID = "userId"
+private const val KEY_USER_ID = "userId"
 
-const val ERROR_VALIDATION = "Fields validation error"
-const val ERROR_USER_EXISTS = "User already exists"
-const val ERROR_USER_OR_PASSWORD = "Incorrect username or password"
+private const val ERROR_VALIDATION = "Fields validation error"
+private const val ERROR_USER_EXISTS = "User already exists"
+private const val ERROR_USER_OR_PASSWORD = "Incorrect username or password"
 
 fun Route.signUp() {
     val hashingService by inject<HashingService>()

@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import java.security.SecureRandom
 
-const val DEFAULT_SALTING_ALGORITHM = "SHA1PRNG"
+private const val DEFAULT_SALTING_ALGORITHM = "SHA1PRNG"
 
 class SHA256HashingService : HashingService {
     override fun generateSaltedHash(value: String, saltLength: Int): SaltedHash {

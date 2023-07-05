@@ -18,7 +18,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-const val ROUTE_CHANGES = "changes"
+private const val ROUTE_CHANGES = "changes"
 
 fun Route.changes() {
     val groupRepository by inject<GroupRepository>()

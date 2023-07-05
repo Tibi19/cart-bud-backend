@@ -11,11 +11,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-const val ROUTE_ENTRY_ROOT = "entry"
-const val ROUTE_ENTRY_CREATE = "$ROUTE_ENTRY_ROOT/create"
-const val ROUTE_ENTRY_LIST_ENTRIES = "$ROUTE_ENTRY_ROOT/list/entries"
-const val ROUTE_ENTRY_UPDATE = "$ROUTE_ENTRY_ROOT/update"
-const val ROUTE_ENTRY_DELETE = "$ROUTE_ENTRY_ROOT/delete"
+private const val ROUTE_ENTRY_ROOT = "entry"
+private const val ROUTE_ENTRY_CREATE = "$ROUTE_ENTRY_ROOT/create"
+private const val ROUTE_ENTRY_LIST_ENTRIES = "$ROUTE_ENTRY_ROOT/list/entries"
+private const val ROUTE_ENTRY_UPDATE = "$ROUTE_ENTRY_ROOT/update"
+private const val ROUTE_ENTRY_DELETE = "$ROUTE_ENTRY_ROOT/delete"
 
 fun Route.createEntry() {
     val entryRepository by inject<EntryRepository>()

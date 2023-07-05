@@ -4,7 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.cors.routing.*
 
-const val ENVIRONMENT_HOST_ADDRESS = "HOST_ADDRESS"
+private const val ENVIRONMENT_HOST_ADDRESS = "HOST_ADDRESS"
 
 fun Application.configureCors() {
     install(CORS) {

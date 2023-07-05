@@ -15,10 +15,10 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-const val ROUTE_INVITATION_ROOT = "invitation"
-const val ROUTE_INVITATION_SEND = "$ROUTE_INVITATION_ROOT/send"
-const val ROUTE_INVITATION_USER_INVITATIONS = "$ROUTE_INVITATION_ROOT/user/invitations"
-const val ROUTE_INVITATION_ACCEPT = "$ROUTE_INVITATION_ROOT/accept"
+private const val ROUTE_INVITATION_ROOT = "invitation"
+private const val ROUTE_INVITATION_SEND = "$ROUTE_INVITATION_ROOT/send"
+private const val ROUTE_INVITATION_USER_INVITATIONS = "$ROUTE_INVITATION_ROOT/user/invitations"
+private const val ROUTE_INVITATION_ACCEPT = "$ROUTE_INVITATION_ROOT/accept"
 
 fun Route.sendInvitation() {
     val invitationRepository by inject<InvitationRepository>()

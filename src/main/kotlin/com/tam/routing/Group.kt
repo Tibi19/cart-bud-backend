@@ -12,11 +12,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-const val ROUTE_GROUP_ROOT = "group"
-const val ROUTE_GROUP_CREATE = "$ROUTE_GROUP_ROOT/create"
-const val ROUTE_GROUP_USER_GROUPS = "$ROUTE_GROUP_ROOT/user/groups"
-const val ROUTE_GROUP_UPDATE = "$ROUTE_GROUP_ROOT/update"
-const val ROUTE_GROUP_DELETE = "$ROUTE_GROUP_ROOT/delete"
+private const val ROUTE_GROUP_ROOT = "group"
+private const val ROUTE_GROUP_CREATE = "$ROUTE_GROUP_ROOT/create"
+private const val ROUTE_GROUP_USER_GROUPS = "$ROUTE_GROUP_ROOT/user/groups"
+private const val ROUTE_GROUP_UPDATE = "$ROUTE_GROUP_ROOT/update"
+private const val ROUTE_GROUP_DELETE = "$ROUTE_GROUP_ROOT/delete"
 
 fun Route.createGroup() {
     val groupRepository by inject<GroupRepository>()

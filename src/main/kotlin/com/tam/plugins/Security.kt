@@ -8,7 +8,7 @@ import com.tam.security.token.TokenConfig
 import io.ktor.server.application.*
 import org.koin.ktor.ext.inject
 
-const val JWT_REALM = "jwt.realm"
+private const val JWT_REALM = "jwt.realm"
 
 fun Application.configureSecurity() {
     val config by inject<TokenConfig>()

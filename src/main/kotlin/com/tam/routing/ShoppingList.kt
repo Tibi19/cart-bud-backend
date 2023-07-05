@@ -1,6 +1,5 @@
 package com.tam.routing
 
-import com.tam.data.model.request.ParentListsRequest
 import com.tam.data.model.request.ShoppingListRequest
 import com.tam.data.repository.contract.GroupRepository
 import com.tam.data.repository.contract.ShoppingListRepository
@@ -15,11 +14,14 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-const val ROUTE_LIST_ROOT = "list"
-const val ROUTE_LIST_CREATE = "$ROUTE_LIST_ROOT/create"
-const val ROUTE_LIST_PARENT_LISTS = "$ROUTE_LIST_ROOT/parent/lists"
-const val ROUTE_LIST_UPDATE = "$ROUTE_LIST_ROOT/update"
-const val ROUTE_LIST_DELETE = "$ROUTE_LIST_ROOT/delete"
+private const val ARG_GROUP_ID = "group_id"
+
+private const val ROUTE_LIST_ROOT = "list"
+private const val ROUTE_LIST_CREATE = "$ROUTE_LIST_ROOT/create"
+private const val ROUTE_LIST_USER_LISTS = "$ROUTE_LIST_ROOT/user/lists"
+private const val ROUTE_LIST_GROUP_LISTS = "$ROUTE_LIST_ROOT/group/{$ARG_GROUP_ID}/lists"
+private const val ROUTE_LIST_UPDATE = "$ROUTE_LIST_ROOT/update"
+private const val ROUTE_LIST_DELETE = "$ROUTE_LIST_ROOT/delete"
 
 fun Route.createShoppingList() {
     val shoppingListRepository by inject<ShoppingListRepository>()
@@ -57,18 +59,41 @@ private suspend fun ApplicationCall.receiveShoppingListRequestAndValidate(): Sho
     return shoppingListRequest
 }
 
-fun Route.parentShoppingLists() {
+fun Route.userShoppingLists() {
     val shoppingListRepository by inject<ShoppingListRepository>()
 
     authenticate {
-        get(ROUTE_LIST_PARENT_LISTS) {
-            val parentListsRequest = call.receiveRequestOrNull<ParentListsRequest>()
+        get(ROUTE_LIST_USER_LISTS) {
+            val userId = call.receiveUserIdOrNull()
                 ?: run {
                     call.respond(HttpStatusCode.BadRequest)
                     return@get
                 }
 
-            val shoppingLists = shoppingListRepository.getShoppingListsByParentId(parentListsRequest.parentId)
+            val shoppingLists = shoppingListRepository.getShoppingListsByParentId(userId)
+                ?: run {
+                    call.respond(HttpStatusCode.InternalServerError)
+                    return@get
+                }
+
+            call.respond(HttpStatusCode.OK, shoppingLists)
+        }
+    }
+
+}
+
+fun Route.groupShoppingLists() {
+    val shoppingListRepository by inject<ShoppingListRepository>()
+
+    authenticate {
+        get(ROUTE_LIST_GROUP_LISTS) {
+            val groupId = call.parameters[ARG_GROUP_ID]
+                ?: run {
+                    call.respond(HttpStatusCode.BadRequest)
+                    return@get
+                }
+
+            val shoppingLists = shoppingListRepository.getShoppingListsByParentId(groupId)
                 ?: run {
                     call.respond(HttpStatusCode.InternalServerError)
                     return@get

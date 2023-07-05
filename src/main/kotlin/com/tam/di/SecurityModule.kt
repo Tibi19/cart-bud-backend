@@ -18,10 +18,10 @@ fun securityModule(environment: ApplicationEnvironment): Module =
         single<TokenConfig> { provideTokenConfig(environment) }
     }
 
-const val DEFAULT_EXPIRATION_TIME = 365L * 1000L * 60L * 60L * 24L
-const val PROPERTY_JWT_ISSUER = "jwt.issuer"
-const val PROPERTY_JWT_AUDIENCE = "jwt.audience"
-const val ENVIRONMENT_JWT_SECRET = "JWT_SECRET"
+private const val DEFAULT_EXPIRATION_TIME = 365L * 1000L * 60L * 60L * 24L
+private const val PROPERTY_JWT_ISSUER = "jwt.issuer"
+private const val PROPERTY_JWT_AUDIENCE = "jwt.audience"
+private const val ENVIRONMENT_JWT_SECRET = "JWT_SECRET"
 
 private fun provideTokenConfig(environment: ApplicationEnvironment): TokenConfig =
     TokenConfig(
