@@ -21,7 +21,7 @@ private const val ROUTE_SIGNUP = "signup"
 private const val ROUTE_SIGNIN = "signin"
 private const val ROUTE_AUTHENTICATE = "authenticate"
 
-private const val KEY_USER_ID = "userId"
+const val KEY_USER_ID = "userId"
 
 private const val ERROR_VALIDATION = "Fields validation error"
 private const val ERROR_USER_EXISTS = "User already exists"
