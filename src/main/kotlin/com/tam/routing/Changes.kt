@@ -26,10 +26,10 @@ fun Route.changes() {
     val entryRepository by inject<EntryRepository>()
 
     authenticate {
-        get(ROUTE_CHANGES) {
+        post(ROUTE_CHANGES) {
             val (userId, changesRequest) = call.receiveRequestInfoWithErrorHandle<ChangesRequest> { statusCode ->
                 call.respond(statusCode)
-            } ?: return@get
+            } ?: return@post
 
             val typeToChangeRequests = changesRequest.changes.groupBy { it.type }
 
@@ -40,7 +40,7 @@ fun Route.changes() {
                 }
             ) ?: run {
                 call.respond(HttpStatusCode.InternalServerError)
-                return@get
+                return@post
             }
 
             val shoppingListsChanges = typeToChangeRequests.toChangesOfType(
@@ -48,7 +48,7 @@ fun Route.changes() {
                 getByIds = shoppingListRepository::getShoppingListsByIds
             ) ?: run {
                 call.respond(HttpStatusCode.InternalServerError)
-                return@get
+                return@post
             }
 
             val entriesChanges = typeToChangeRequests.toChangesOfType(
@@ -56,7 +56,7 @@ fun Route.changes() {
                 getByIds = entryRepository::getEntriesByIds
             ) ?: run {
                 call.respond(HttpStatusCode.InternalServerError)
-                return@get
+                return@post
             }
 
             val changesResponse = ChangesResponse(
