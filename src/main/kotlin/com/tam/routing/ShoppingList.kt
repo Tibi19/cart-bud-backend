@@ -3,10 +3,9 @@ package com.tam.routing
 import com.tam.data.model.request.ShoppingListRequest
 import com.tam.data.repository.contract.GroupRepository
 import com.tam.data.repository.contract.ShoppingListRepository
-import com.tam.data.repository.contract.UserRepository
 import com.tam.routing.util.receiveRequestOrNull
 import com.tam.routing.util.receiveUserIdOrNull
-import com.tam.usecase.validateParent
+import com.tam.usecase.validateGroupParent
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -28,7 +27,7 @@ fun Route.createShoppingList() {
 
     authenticate {
         post(ROUTE_LIST_CREATE) {
-            val shoppingListRequest = call.receiveShoppingListRequestAndValidate()
+            val shoppingListRequest = call.receiveOnCreateShoppingListRequestAndValidate()
                 ?: run {
                     call.respond(HttpStatusCode.BadRequest)
                     return@post
@@ -47,13 +46,32 @@ fun Route.createShoppingList() {
 }
 
 private suspend fun ApplicationCall.receiveShoppingListRequestAndValidate(): ShoppingListRequest? {
-    val groupRepository by inject<GroupRepository>()
-    val userRepository by inject<UserRepository>()
-
     val userId = receiveUserIdOrNull() ?: return null
     val shoppingListRequest = receiveRequestOrNull<ShoppingListRequest>() ?: return null
-    val isValidParent = shoppingListRequest.validateParent(userId, groupRepository, userRepository)
-    if (!isValidParent) {
+
+    if (!shoppingListRequest.hasGroupParent) {
+        return shoppingListRequest
+    }
+
+    val groupRepository by inject<GroupRepository>()
+    val isValidGroupParent = shoppingListRequest.validateGroupParent(userId, groupRepository)
+    if (!isValidGroupParent) {
+        return null
+    }
+    return shoppingListRequest
+}
+
+private suspend fun ApplicationCall.receiveOnCreateShoppingListRequestAndValidate(): ShoppingListRequest? {
+    val userId = receiveUserIdOrNull() ?: return null
+    val shoppingListRequest = receiveRequestOrNull<ShoppingListRequest>() ?: return null
+
+    if (!shoppingListRequest.hasGroupParent) {
+        return shoppingListRequest.copy(parentId = userId)
+    }
+
+    val groupRepository by inject<GroupRepository>()
+    val isValidGroupParent = shoppingListRequest.validateGroupParent(userId, groupRepository)
+    if (!isValidGroupParent) {
         return null
     }
     return shoppingListRequest

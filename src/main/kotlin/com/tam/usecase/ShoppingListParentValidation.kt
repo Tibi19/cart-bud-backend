@@ -2,22 +2,17 @@ package com.tam.usecase
 
 import com.tam.data.model.request.ShoppingListRequest
 import com.tam.data.repository.contract.GroupRepository
-import com.tam.data.repository.contract.UserRepository
 
-fun ShoppingListRequest.validateParent(
+fun ShoppingListRequest.validateGroupParent(
     userId: String,
-    groupRepository: GroupRepository,
-    userRepository: UserRepository
+    groupRepository: GroupRepository
 ): Boolean {
-    if (hasGroupParent) {
-        val groupParent = groupRepository.getGroupById(parentId) ?: return false
-        groupRepository
-            .getGroupsByUserId(userId)
-            ?.any { it.id == groupParent.id }
-            ?: return false
-        return true
-    }
+    if (!hasGroupParent) return false
 
-    userRepository.getUserByUserId(parentId) ?: return false
+    val groupParent = groupRepository.getGroupById(parentId) ?: return false
+    groupRepository
+        .getGroupsByUserId(userId)
+        ?.any { it.id == groupParent.id }
+        ?: return false
     return true
 }
